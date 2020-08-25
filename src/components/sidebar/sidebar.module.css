@@ -1,0 +1,25 @@
+.sidebar_paper {
+	background: #eee;
+	position: unset !important;
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+.sidebar_icon {
+	min-width: 32px !important;
+}
+
+.toolbar {
+	height: 50px;
+	display: flex;
+	justify-content: center;
+}
+
+.dark_mode {
+	padding: 0;
+}
+
+.icon {
+	height: 24px;
+	width: 24px;
+}

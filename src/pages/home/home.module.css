@@ -1,0 +1,14 @@
+.main {
+	height: 550px;
+}
+
+.top {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.pagination {
+	display: flex;
+	justify-content: center;
+}

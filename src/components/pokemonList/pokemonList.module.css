@@ -1,0 +1,9 @@
+.text {
+	height: 30px;
+	display: flex;
+	align-items: center;
+}
+
+.name {
+	text-transform: capitalize;
+}

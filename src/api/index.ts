@@ -7,10 +7,18 @@ const getAllPokemon = async (skip = 0, limit = 10) => {
 		throw new Error(res.statusText);
 	}
 
-	return await res.json();
+	return res.json();
 }
 
-const getPokemonByName = () => {}
+const getPokemonByName = async (name: string) => {
+	const res = await fetch(`${API_URL}${name}`);
+
+	if (res.status !== 200) {
+		throw new Error(res.statusText);
+	}
+
+	return res.json();
+}
 
 export {
 	API_URL,

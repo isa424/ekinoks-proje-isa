@@ -4,6 +4,12 @@
 	align-items: center;
 }
 
+.img {
+	height: 30px;
+	width: 30px;
+	margin-right: 10px;
+}
+
 .name {
 	text-transform: capitalize;
 }

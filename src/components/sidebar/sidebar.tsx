@@ -1,13 +1,7 @@
-import { Divider, List, ListItemText, ListItemIcon, Checkbox, Switch } from '@material-ui/core';
-import SwitchBase from '@material-ui/core/internal/SwitchBase';
+import { Divider, List, ListItemText, ListItemIcon, Switch } from '@material-ui/core';
 import ListItem from '@material-ui/core/ListItem';
-import { makeStyles } from '@material-ui/core/styles';
-import React, { useState } from 'react';
+import React from 'react';
 import Drawer from '@material-ui/core/Drawer';
-import HomeIcon from '@material-ui/icons/Home';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import Brightness4Icon from '@material-ui/icons/Brightness4';
-import SportsBaseballIcon from '@material-ui/icons/SportsBaseball';
 import { NavLink } from 'react-router-dom';
 import styles from './sidebar.module.css';
 
@@ -52,6 +46,7 @@ const Sidebar = ({darkMode, setDarkMode}: Props) => {
 						activeClassName={'Mui-selected'}
 					>
 						<ListItemIcon classes={{root: styles.sidebar_icon}}>
+							{/* eslint-disable-next-line jsx-a11y/alt-text */}
 							<img className={styles.icon} src={src}/>
 						</ListItemIcon>
 						<ListItemText primary={text}/>

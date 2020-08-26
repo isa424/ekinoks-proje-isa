@@ -1,3 +1,5 @@
+import IPokemon from './pokemon';
+
 export interface IListDataItem {
 	name: string
 	url: string
@@ -9,3 +11,5 @@ export interface IListData {
 	prev: string|null
 	results: IListDataItem[]
 }
+
+export interface IData extends IPokemon {}

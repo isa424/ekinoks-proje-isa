@@ -4,7 +4,7 @@ import { Skeleton } from '@material-ui/lab';
 import styles from './loadingListContent.module.css';
 
 type Props = {
-	max: number
+	max?: number
 }
 
 const LoadingListContent = ({max = 10}: Props) => {

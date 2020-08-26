@@ -1,0 +1,26 @@
+.stats {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.stats strong {
+	width: 110px;
+	text-transform: capitalize;
+}
+
+.stats > div {
+	display: flex;
+	margin-bottom: 20px;
+	align-items: center;
+}
+
+.chip {
+	margin-right: 10px;
+	text-transform: capitalize;
+}
+
+.stat_root {
+	height: 10px !important;
+	width: 100%;
+}

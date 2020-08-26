@@ -1,0 +1,39 @@
+.tabs {
+	min-height: 36px !important;
+	margin-top: -5px;
+}
+
+.tab {
+	min-height: 36px !important;
+}
+
+.tab span {
+	font-size: 12px;
+}
+
+.catch_img {
+	height: 20px;
+	width: 20px;
+}
+
+.capital {
+	text-transform: capitalize;
+}
+
+.img_div {
+	width: 200px;
+}
+
+.img {
+	height: 128px;
+	width: 128px;
+}
+
+.panel {
+	display: flex;
+	width: 100%;
+}
+
+.text_skeleton {
+	width: 200px;
+}

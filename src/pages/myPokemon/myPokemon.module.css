@@ -1,11 +1,10 @@
-.main {
-	height: 500px;
-}
-
-.top {
+.header {
 	display: flex;
 	justify-content: space-between;
-	align-items: center;
+}
+
+.main {
+	height: 500px;
 }
 
 .pagination {

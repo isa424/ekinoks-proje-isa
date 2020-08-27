@@ -2,7 +2,7 @@ import { Paper } from '@material-ui/core';
 import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import React, { useMemo, useState } from 'react';
 import DetailsPage from '../../pages/details/details';
-import FavsPage from '../../pages/favourites/favsPage';
+import FavsPage from '../../pages/favorites/favsPage';
 import HomePage from '../../pages/home/home';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import MyPokemonPage from '../../pages/myPokemon/myPokemon';
@@ -34,13 +34,6 @@ const App = () => {
 	const [darkMode, setDarkMode] = useState(false);
 	const {root, main} = useStyles();
 	const theme = useMemo(() => createMuiTheme({
-		overrides: {
-			MuiTab: {
-				root: {
-					// minHeight: 30,
-				}
-			}
-		},
 		palette: {
 			type: darkMode ? 'dark' : 'light',
 		},
@@ -64,7 +57,7 @@ const App = () => {
 								<Route path={'/mine'}>
 									<MyPokemonPage/>
 								</Route>
-								<Route path={'/:name'}>
+								<Route path={'/:id'}>
 									<DetailsPage/>
 								</Route>
 							</Switch>

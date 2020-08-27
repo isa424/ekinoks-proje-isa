@@ -1,28 +1,20 @@
 import { Tab, List, ListItem } from '@material-ui/core';
-import Chip from '@material-ui/core/Chip';
 import ListItemText from '@material-ui/core/ListItemText';
-import Paper from '@material-ui/core/Paper';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { getPokemonByName } from '../../api';
+import { Link } from 'react-router-dom';
 import Abilities from '../../components/abilities/abilities';
-import Progress from '../../components/progress/progress';
 import Stats from '../../components/stats/stats';
 import TabPanel from '../../components/tabPanel/tabPanel';
-import { IData } from '../../types/data';
 import IPokemon from '../../types/pokemon';
 import Tabs from '@material-ui/core/Tabs';
 import Skeleton from '@material-ui/lab/Skeleton';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
 import styles from './details.module.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchPokemon, releasePokemonById, catchPokemonById, addToFavsById, removeFromFavsById } from '../../reducers/pokemon';
+import { RootState } from '../../reducers';
+import NotFound from '../../components/error/error';
 
 const a11yProps = (index: any) => {
 	return {
@@ -55,9 +47,9 @@ const Info = ({pokemon, props}: { pokemon: IPokemon, props: InfoType }) => {
 };
 
 const DetailsPage = () => {
-	const {name} = useParams();
-	const [loading, setLoading] = useState(true);
-	const [pokemon, setPokemon] = useState<IPokemon>({name: '', id: 0});
+	const {id} = useParams();
+	const pid = parseInt(id);
+	const dispatch = useDispatch();
 	const [tab, setTab] = useState(0);
 	// Iterate over pokemon basic info properties and display them
 	const infoProps: InfoType[] = [
@@ -74,83 +66,149 @@ const DetailsPage = () => {
 		setTab(newValue);
 	}
 
+	const handleCatching = (e: MouseEvent) => {
+		e.preventDefault();
+		const index = caught.indexOf(pid);
+
+		if (index > -1) {
+			dispatch(releasePokemonById(pid));
+		} else {
+			dispatch(catchPokemonById(pid));
+		}
+	}
+
+	const handleFavs = (e: MouseEvent) => {
+		e.preventDefault();
+		const index = favorites.indexOf(pid);
+
+		if (index > -1) {
+			dispatch(removeFromFavsById(pid));
+		} else {
+			dispatch(addToFavsById(pid));
+		}
+	}
+
+	const {pokemon, error, isLoading, favorites, caught} = useSelector(
+		(state: RootState) => ({
+			pokemon: state.pokemon.pokemonById[pid],
+			error: state.pokemon.error,
+			isLoading: state.pokemon.isLoading,
+			favorites: state.pokemon.favorites,
+			caught: state.pokemon.caught,
+		}),
+	);
+
 	useEffect(() => {
-		const fetchPokemon = async () => {
-			const data: IData = await getPokemonByName(name);
+		if (!pokemon || !pokemon.isFull) {
+			dispatch(fetchPokemon(pid));
+		}
+	}, [pokemon, dispatch]);
 
-			setLoading(false);
-			setPokemon(data);
-		};
+	let content;
 
-		fetchPokemon().catch(e => console.error(e));
-	}, [name]);
-
-	// Image, Order, Basic Info/Stats, Abilities
-	return (
-		<>
-			<Tabs
-				indicatorColor={'primary'}
-				textColor={'primary'}
-				variant={'fullWidth'}
-				centered={true}
-				value={tab}
-				className={styles.tabs}
-				onChange={handleTabChange}
-			>
-				<Tab className={styles.tab} label={'Basic Info'} {...a11yProps(0)}/>
-				<Tab className={styles.tab} label={'Stats'} {...a11yProps(1)}/>
-				<Tab className={styles.tab} label={'Abilities'} {...a11yProps(2)}/>
-			</Tabs>
-			<TabPanel value={tab} index={0}>
-				<div className={styles.panel}>
-					<div className={styles.img_div}>
-						{loading ? (
-							<Skeleton variant={'rect'} height={128} width={128}/>
-						) : (
-							<img className={styles.img}
-								 src={pokemon.sprites?.other['official-artwork'].front_default} alt=""/>
-						)}
-					</div>
-					<div>
-						<List>
-							<ListItem dense>
-								<ListItemText primary={
-									<Button variant='contained' color='default' size='small' startIcon={
-										<img className={styles.catch_img} src={'/catch.svg'}/>
-									}>Catch</Button>
-								}/>
-							</ListItem>
-							<ListItem dense>
-								<ListItemText primary={
-									<Button variant='contained' color='default' size='small' startIcon={
-										<img className={styles.catch_img} src={'/star.svg'}/>
-									}>Add to Favs</Button>
-								}/>
-							</ListItem>
-							{infoProps.map((props, i) => (
-								<ListItem key={i} dense>
+	if (!pokemon) {
+		content = (
+			<NotFound text={error as string}/>
+		);
+	} else {
+		// Image, Order, Basic Info/Stats, Abilities
+		content = (
+			<>
+				<Tabs
+					indicatorColor={'primary'}
+					textColor={'primary'}
+					variant={'fullWidth'}
+					centered={true}
+					value={tab}
+					className={styles.tabs}
+					onChange={handleTabChange}
+				>
+					<Tab className={styles.tab} label={'Basic Info'} {...a11yProps(0)}/>
+					<Tab className={styles.tab} label={'Stats'} {...a11yProps(1)}/>
+					<Tab className={styles.tab} label={'Abilities'} {...a11yProps(2)}/>
+				</Tabs>
+				<TabPanel value={tab} index={0}>
+					<div className={styles.panel}>
+						<div className={styles.img_div}>
+							{isLoading ? (
+								<Skeleton variant={'rect'} height={128} width={128}/>
+							) : (
+								<img className={styles.img}
+									 src={pokemon.sprites?.other['official-artwork'].front_default} alt=""/>
+							)}
+						</div>
+						<div>
+							<List>
+								<ListItem dense>
 									<ListItemText primary={
-										loading ? <Skeleton className={styles.text_skeleton}/> :
-											<Info pokemon={pokemon} props={props}/>
+										<Button
+											variant='contained'
+											color='default'
+											size='small'
+											startIcon={<img className={styles.catch_img} src={'/catch.svg'}/>}
+											onClick={handleCatching}
+										>
+											{caught.indexOf(pid) > -1 ? 'Release' : 'Catch'}
+										</Button>
 									}/>
 								</ListItem>
-							))}
-						</List>
+								<ListItem dense>
+									<ListItemText primary={
+										<Button
+											variant='contained'
+											color='default'
+											size='small'
+											startIcon={
+												<img className={styles.catch_img} src={'/star.svg'}/>
+											}
+											onClick={handleFavs}
+										>
+											{favorites.indexOf(pid) > -1 ? 'Remove from Favs' : 'Add to Favs'}
+										</Button>
+									}/>
+								</ListItem>
+								{infoProps.map((props, i) => (
+									<ListItem key={i} dense>
+										<ListItemText primary={
+											isLoading ? <Skeleton className={styles.text_skeleton}/> :
+												<Info pokemon={pokemon} props={props}/>
+										}/>
+									</ListItem>
+								))}
+							</List>
+						</div>
 					</div>
+				</TabPanel>
+
+				<TabPanel value={tab} index={1}>
+					<div className={styles.panel}>
+						<Stats pokemon={pokemon}/>
+					</div>
+				</TabPanel>
+
+				<TabPanel value={tab} index={2}>
+					<div className={styles.panel}>
+						<Abilities pokemon={pokemon}/>
+					</div>
+				</TabPanel>
+				<div className={styles.bottom_nav}>
+					<Button
+						component={Link}
+						to={`/${pid - 1}`}
+						size={'small'}
+						disabled={pid === 1}
+					>Prev</Button>
+					<Button
+						component={Link}
+						to={`/${pid + 1}`}
+						size={'small'}
+					>Next</Button>
 				</div>
-			</TabPanel>
-			<TabPanel value={tab} index={1}>
-				<div className={styles.panel}>
-					<Stats pokemon={pokemon}/>
-				</div>
-			</TabPanel>
-			<TabPanel value={tab} index={2}>
-				<div className={styles.panel}>
-					<Abilities pokemon={pokemon}/>
-				</div>
-			</TabPanel>
-		</>
-	);
+			</>
+		);
+	}
+
+	return content;
 }
 
 export default DetailsPage;

@@ -1,6 +1,5 @@
 import React from 'react';
 import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -9,7 +8,7 @@ interface TabPanelProps {
 }
 
 const TabPanel = (props: TabPanelProps) => {
-	const { children, index, value, ...other } = props;
+	const {children, index, value, ...other} = props;
 
 	return (
 		<div

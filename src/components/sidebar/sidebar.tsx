@@ -46,7 +46,6 @@ const Sidebar = ({darkMode, setDarkMode}: Props) => {
 						activeClassName={'Mui-selected'}
 					>
 						<ListItemIcon classes={{root: styles.sidebar_icon}}>
-							{/* eslint-disable-next-line jsx-a11y/alt-text */}
 							<img className={styles.icon} src={src}/>
 						</ListItemIcon>
 						<ListItemText primary={text}/>

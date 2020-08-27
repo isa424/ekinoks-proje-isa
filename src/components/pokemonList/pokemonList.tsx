@@ -3,28 +3,41 @@ import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import IPokemon from '../../types/pokemon';
 import styles from './pokemonList.module.css';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../reducers';
 
 type Props = {
-	pokemon: IPokemon[],
+	list: IPokemon['id'][]
 }
 
-const PokemonList = ({pokemon}: Props) => {
+const PokemonList = ({list}: Props) => {
 	const url = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world';
+
+	const { pokemonById } = useSelector((state: RootState) => ({
+		pokemonById: state.pokemon.pokemonById
+	}));
+
+	if (!list.length) {
+		return <div>
+			<p>Empty!</p>
+		</div>
+	}
 
 	return (
 		<List>
-			{pokemon.map(({id, name}, i) => (
-				<ListItem key={i} dense divider={i + 1 < pokemon.length}>
+			{list.map((id, i) => (
+				<ListItem key={i} dense divider={i + 1 < list.length}>
 					<ListItemText primary={
 						<div className={styles.text}>
 							<img className={styles.img} src={`${url}/${id}.svg`} alt=""/>
+							<strong>#{id}&nbsp;</strong>
 							<Typography>
 								<Link
-									to={`/${name}`}
+									to={`/${id}`}
 									className={styles.name}
 									component={RouterLink}
 									color={'inherit'}
-								>{name}</Link>
+								>{pokemonById[id].name}</Link>
 							</Typography>
 						</div>
 					}/>

@@ -1,6 +1,7 @@
 export default interface IPokemon {
 	id: number
 	name: string
+	isFull?: boolean // Indicates if object was fully fetched
 	height?: number
 	weight?: number
 	base_experience?: number
